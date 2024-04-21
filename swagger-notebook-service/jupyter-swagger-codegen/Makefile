@@ -3,11 +3,11 @@
 
 .PHONY: config
 
-SWAGGER_VERSION?=2.1.4
+SWAGGER_VERSION?=2.2.1
 SWAGGER_SPEC?=https://petstore.swagger.io/v2/swagger.json
 KERNEL?=python3
 APP_VERSION?=1.0.0
-REPO=maven:3.9-sapmachine
+REPO=maven:3-eclipse-temurin-11
 
 clean:
 	@docker run -it --rm \
