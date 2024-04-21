@@ -4,10 +4,10 @@
 .PHONY: config
 
 SWAGGER_VERSION?=2.1.4
-SWAGGER_SPEC?=http://petstore.swagger.io/v2/swagger.json
+SWAGGER_SPEC?=https://petstore.swagger.io/v2/swagger.json
 KERNEL?=python3
 APP_VERSION?=1.0.0
-REPO=maven:3.3.3-jdk-7
+REPO=maven:3.9-sapmachine
 
 clean:
 	@docker run -it --rm \
@@ -22,7 +22,7 @@ swagger-codegen-cli-$(SWAGGER_VERSION).jar:
 		 -v `pwd`:/src \
 		 -v `pwd`/target/.m2:/root/.m2 \
 		 -w /src \
-		 $(REPO) curl http://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/${SWAGGER_VERSION}/swagger-codegen-cli-${SWAGGER_VERSION}.jar -o swagger-codegen-cli-${SWAGGER_VERSION}.jar
+		 $(REPO) curl https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/${SWAGGER_VERSION}/swagger-codegen-cli-${SWAGGER_VERSION}.jar -o swagger-codegen-cli-${SWAGGER_VERSION}.jar
 
 download_swagger: swagger-codegen-cli-$(SWAGGER_VERSION).jar
 
@@ -41,5 +41,12 @@ gen: install config download_swagger
 			 -v `pwd`:/src \
 			 -v `pwd`/target/.m2:/root/.m2 \
 			 -w /src \
-			 $(REPO) java -cp swagger-codegen-cli-${SWAGGER_VERSION}.jar:target/jupyter-swagger-codegen-$(APP_VERSION).jar \
+			 $(REPO) java -cp swagger-codegen-cli-${SWAGGER_VERSION}.jar:target/jupyter-swagger-codegen-${APP_VERSION}.jar \
                	io.swagger.codegen.Codegen -i ${SWAGGER_SPEC} -l jupyter -c target/config.json
+
+sh: install config
+	@docker run -it --rm \
+			 -v `pwd`:/src \
+			 -v `pwd`/target/.m2:/root/.m2 \
+			 -w /src \
+			$(REPO) bash
